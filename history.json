@@ -1,0 +1,101 @@
+[
+  {},
+  [],
+  [],
+  {
+    "id": "vegetable_waste_1780559903159",
+    "name": "Vegetable Waste",
+    "category": "biodegradable",
+    "points": 10,
+    "co2": 0.14,
+    "timestamp": "01:28 PM"
+  },
+  {
+    "id": "newspaper_1780559881775",
+    "name": "Newspaper / Ads",
+    "category": "recyclable",
+    "points": 15,
+    "co2": 0.2,
+    "timestamp": "01:28 PM"
+  },
+  {
+    "id": "vegetable_waste_1780559850930",
+    "name": "Vegetable Waste",
+    "category": "biodegradable",
+    "points": 10,
+    "co2": 0.14,
+    "timestamp": "01:27 PM"
+  },
+  {
+    "id": "newspaper_1780559789591",
+    "name": "Newspaper / Ads",
+    "category": "recyclable",
+    "points": 15,
+    "co2": 0.2,
+    "timestamp": "01:26 PM"
+  },
+  {
+    "id": "unlisted_123456_1780559171994",
+    "name": "Old smartphone / tablet",
+    "category": "ewaste",
+    "points": 30,
+    "co2": 1.5,
+    "timestamp": "01:16 pm"
+  },
+  {
+    "id": "plastic_bottle_1780559159757",
+    "name": "Plastic Water Bottle",
+    "category": "recyclable",
+    "points": 20,
+    "co2": 0.25,
+    "timestamp": "01:15 pm"
+  },
+  {
+    "id": "aa_battery_1780559146956",
+    "name": "Alkaline Battery (AA/AAA/C/D)",
+    "category": "ewaste",
+    "points": 30,
+    "co2": 0.1,
+    "timestamp": "01:15 pm"
+  },
+  {
+    "id": "unlisted_123456_1780559126923",
+    "name": "Old smartphone / tablet",
+    "category": "ewaste",
+    "points": 30,
+    "co2": 1.5,
+    "timestamp": "01:15 pm"
+  },
+  {
+    "id": "unlisted_123456_1780559112725",
+    "name": "Old smartphone / tablet",
+    "category": "ewaste",
+    "points": 30,
+    "co2": 1.5,
+    "timestamp": "01:15 pm"
+  },
+  {
+    "id": "unlisted_123456_1780559097419",
+    "name": "Old smartphone / tablet",
+    "category": "ewaste",
+    "points": 30,
+    "co2": 1.5,
+    "timestamp": "01:14 pm"
+  },
+  {
+    "id": "unlisted_123456_1780551345932",
+    "name": "Old smartphone / tablet",
+    "category": "ewaste",
+    "points": 30,
+    "co2": 1.5,
+    "timestamp": "11:05 am"
+  },
+  {
+    "id": "unlisted_123456_1780551331791",
+    "name": "Old smartphone / tablet",
+    "category": "ewaste",
+    "points": 30,
+    "co2": 1.5,
+    "timestamp": "11:05 am"
+  }
+]

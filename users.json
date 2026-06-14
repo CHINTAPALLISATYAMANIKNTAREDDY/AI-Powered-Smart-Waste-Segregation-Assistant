@@ -1,0 +1,186 @@
+{
+  "users": {
+    "user@example.com": {
+      "password_hash": "9b8769a4a742959a2d0298c36fb70623f2dfacda8436237df08d8dfd5b37374c",
+      "history": [
+        {
+          "id": "apple_core_1781279012701",
+          "name": "Apple Core",
+          "category": "biodegradable",
+          "points": 15,
+          "co2": 0.15,
+          "timestamp": "09:13 PM"
+        }
+      ]
+    },
+    "+15557654321": {
+      "password_hash": "46708f23d682fef9aa996ecbb139bfb6c9ffdc039905ad6ad5c85a88b9411d97",
+      "history": []
+    },
+    "john@example.com": {
+      "password_hash": "fed32efee280ccefbab6608aa29f33bbd00d71bdc29174249dc07e0114262508",
+      "history": []
+    },
+    "watson@example.com": {
+      "password_hash": "fed32efee280ccefbab6608aa29f33bbd00d71bdc29174249dc07e0114262508",
+      "name": "Dr. John Watson",
+      "phone": "+15550192834",
+      "history": []
+    },
+    "watson2@example.com": {
+      "password_hash": "fed32efee280ccefbab6608aa29f33bbd00d71bdc29174249dc07e0114262508",
+      "name": "Dr. John Watson 2",
+      "phone": "+15550192835",
+      "history": []
+    },
+    "+917661909974": {
+      "password_hash": "4a70dab2cb4de46e76acd8cf72651a89ab4d85b2b0cbe8afaa43d4a731704688",
+      "name": "Manikanta",
+      "phone": "+917661909974",
+      "history": []
+    },
+    "+15550192834": {
+      "password_hash": "fed32efee280ccefbab6608aa29f33bbd00d71bdc29174249dc07e0114262508",
+      "name": "Dr. John Watson",
+      "phone": "+15550192834",
+      "history": []
+    },
+    "+15550000000": {
+      "password_hash": "1d707811988069ca760826861d6d63a10e8c3b7f171c4441a6472ea58c11711b",
+      "name": "Test Suffix User",
+      "phone": "+15550000000",
+      "history": []
+    },
+    "+919999988888": {
+      "password_hash": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+      "name": "Tester",
+      "phone": "+919999988888",
+      "history": [
+        {
+          "id": "banana_peel_1781358472351",
+          "name": "Banana Peel",
+          "category": "biodegradable",
+          "points": 10,
+          "co2": 0.12,
+          "timestamp": "07:17 PM"
+        },
+        {
+          "id": "banana_peel_1781358470474",
+          "name": "Banana Peel",
+          "category": "biodegradable",
+          "points": 10,
+          "co2": 0.12,
+          "timestamp": "07:17 PM"
+        },
+        {
+          "id": "banana_peel_1781355951077",
+          "name": "Banana Peel",
+          "category": "biodegradable",
+          "points": 10,
+          "co2": 0.12,
+          "timestamp": "06:35 PM"
+        }
+      ]
+    },
+    "+919999999999": {
+      "password_hash": "7a932337e63ea9c15284541abaa6037a803820556b5477d1cefe91d7cba5ba1c",
+      "password_salt": "084bac7bff131649c722a51d292d7a16",
+      "name": "Test User",
+      "phone": "+919999999999",
+      "history": [
+        {
+          "id": "apple_core_1781418623958",
+          "name": "Apple Core",
+          "category": "biodegradable",
+          "points": 15,
+          "co2": 0.15,
+          "timestamp": "12:00 PM"
+        },
+        {
+          "id": "aa_battery_1781417920670",
+          "name": "Alkaline Battery (AA/AAA/C/D)",
+          "category": "ewaste",
+          "points": 30,
+          "co2": 0.1,
+          "timestamp": "11:48 AM"
+        },
+        {
+          "id": "apple_core_1781417920522",
+          "name": "Apple Core",
+          "category": "biodegradable",
+          "points": 15,
+          "co2": 0.15,
+          "timestamp": "11:48 AM"
+        },
+        {
+          "id": "plastic_bottle_1781417914211",
+          "name": "Plastic Water Bottle",
+          "category": "recyclable",
+          "points": 20,
+          "co2": 0.25,
+          "timestamp": "11:48 AM"
+        }
+      ]
+    },
+    "+916305955625": {
+      "password_hash": "e6604e80fd8b0b1b120061721fa461a6ea7df48370611be675bc171c8e76e4ec",
+      "password_salt": "f33335ebe40248c1ecb9459883e0331b",
+      "name": "bobby",
+      "phone": "+916305955625",
+      "history": [
+        {
+          "id": "banana_peel_1781422033806",
+          "name": "Banana Peel",
+          "category": "biodegradable",
+          "points": 10,
+          "co2": 0.12,
+          "timestamp": "12:57 PM"
+        },
+        {
+          "id": "newspaper_1781422017958",
+          "name": "Newspaper / Ads",
+          "category": "recyclable",
+          "points": 15,
+          "co2": 0.2,
+          "timestamp": "12:56 PM"
+        },
+        {
+          "id": "plastic_bag_1781421962598",
+          "name": "Plastic Grocery Bag",
+          "category": "non-recyclable",
+          "points": 5,
+          "co2": 0.05,
+          "timestamp": "12:56 PM"
+        },
+        {
+          "id": "aa_battery_1781421949261",
+          "name": "Alkaline Battery (AA/AAA/C/D)",
+          "category": "ewaste",
+          "points": 30,
+          "co2": 0.1,
+          "timestamp": "12:55 PM"
+        },
+        {
+          "id": "plastic_bottle_1781421931001",
+          "name": "Plastic Water Bottle",
+          "category": "recyclable",
+          "points": 20,
+          "co2": 0.25,
+          "timestamp": "12:55 PM"
+        },
+        {
+          "id": "apple_core_1781421915107",
+          "name": "Apple Core",
+          "category": "biodegradable",
+          "points": 15,
+          "co2": 0.15,
+          "timestamp": "12:55 PM"
+        }
+      ]
+    }
+  },
+  "sessions": {
+    "b819aeb52bb3fb69ab5b9a05963f61fc": "+919999999999",
+    "76a1ab8ee2479a5c7c058e7930f3184d": "+916305955625"
+  }
+}

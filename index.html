@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoSort AI - Waste Classification & Disposal Guide</title>
+  <meta name="description"
+    content="Identify, analyze and classify household waste items with EcoSort AI. Discover step-by-step preparation, recycling points, and upcycling ideas.">
+  <link rel="stylesheet" href="styles.css">
+  <!-- TensorFlow.js, MobileNet, and Chart.js JS Dependencies -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.17.0/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet@2.1.0/dist/mobilenet.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+  <!-- Authentication Screen -->
+  <div id="auth-container" class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="auth-logo-icon">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M12 2a10 10 0 0 0-10 10 10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2zm1 14.5h-2v-2h2v2zm0-3.5h-2V7h2v6z" />
+          </svg>
+        </div>
+        <h2>EcoSort AI</h2>
+        <p class="auth-subtitle">AI-Powered Smart Waste Segregation Assistant</p>
+      </div>
+
+      <!-- Error Message Banner -->
+      <div id="auth-error" class="auth-error-box" style="display: none;"></div>
+
+      <!-- Login Form -->
+      <form id="login-form" class="auth-form">
+        <div class="input-group">
+          <label for="login-phone">Phone Number</label>
+          <div class="phone-input-wrapper">
+            <select id="login-country-code" class="country-select">
+              <option value="+91" selected>🇮🇳 +91 India</option>
+              <option value="+1">🇺🇸 +1 USA/Canada</option>
+              <option value="+44">🇬🇧 +44 United Kingdom</option>
+              <option value="+61">🇦🇺 +61 Australia</option>
+              <option value="+49">🇩🇪 +49 Germany</option>
+              <option value="+33">🇫🇷 +33 France</option>
+              <option value="+81">🇯🇵 +81 Japan</option>
+              <option value="+65">🇸🇬 +65 Singapore</option>
+              <option value="+971">🇦🇪 +971 UAE</option>
+              <option value="+966">🇸🇦 +966 Saudi Arabia</option>
+              <option value="+55">🇧🇷 +55 Brazil</option>
+              <option value="+27">🇿🇦 +27 South Africa</option>
+              <option value="+7">🇷🇺 +7 Russia</option>
+              <option value="+86">🇨🇳 +86 China</option>
+            </select>
+            <div class="input-wrapper flex-1">
+              <svg class="input-icon" viewBox="0 0 24 24">
+                <path
+                  d="M6.62 10.79a15.15 15.15 0 0 0 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
+              </svg>
+              <input type="tel" id="login-phone" placeholder="98765 43210" required autocomplete="tel">
+            </div>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="login-password">Password</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 24 24">
+              <path
+                d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" />
+            </svg>
+            <input type="password" id="login-password" placeholder="••••••••" required autocomplete="current-password">
+            <button type="button" class="password-toggle" data-target="login-password"
+              aria-label="Toggle Password Visibility">
+              <svg class="toggle-icon" viewBox="0 0 24 24">
+                <path
+                  d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" id="login-btn" class="auth-submit-btn">
+          <span>Login</span>
+          <div class="spinner" style="display: none;"></div>
+        </button>
+
+        <p class="auth-toggle-text">
+          Don't have an account? <a href="#" id="show-register">Register</a>
+        </p>
+      </form>
+
+      <!-- Register Form -->
+      <form id="register-form" class="auth-form" style="display: none;">
+        <div class="input-group">
+          <label for="register-name">Full Name</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 24 24">
+              <path
+                d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+            </svg>
+            <input type="text" id="register-name" placeholder="John Doe" required autocomplete="name">
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="register-phone">Phone Number</label>
+          <div class="phone-input-wrapper">
+            <select id="register-country-code" class="country-select">
+              <option value="+91" selected>🇮🇳 +91 India</option>
+              <option value="+1">🇺🇸 +1 USA/Canada</option>
+              <option value="+44">🇬🇧 +44 United Kingdom</option>
+              <option value="+61">🇦🇺 +61 Australia</option>
+              <option value="+49">🇩🇪 +49 Germany</option>
+              <option value="+33">🇫🇷 +33 France</option>
+              <option value="+81">🇯🇵 +81 Japan</option>
+              <option value="+65">🇸🇬 +65 Singapore</option>
+              <option value="+971">🇦🇪 +971 UAE</option>
+              <option value="+966">🇸🇦 +966 Saudi Arabia</option>
+              <option value="+55">🇧🇷 +55 Brazil</option>
+              <option value="+27">🇿🇦 +27 South Africa</option>
+              <option value="+7">🇷🇺 +7 Russia</option>
+              <option value="+86">🇨🇳 +86 China</option>
+            </select>
+            <div class="input-wrapper flex-1">
+              <svg class="input-icon" viewBox="0 0 24 24">
+                <path
+                  d="M6.62 10.79a15.15 15.15 0 0 0 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z" />
+              </svg>
+              <input type="tel" id="register-phone" placeholder="98765 43210" required autocomplete="tel">
+            </div>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="register-password">Password</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 24 24">
+              <path
+                d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" />
+            </svg>
+            <input type="password" id="register-password" placeholder="••••••••" required autocomplete="new-password">
+            <button type="button" class="password-toggle" data-target="register-password"
+              aria-label="Toggle Password Visibility">
+              <svg class="toggle-icon" viewBox="0 0 24 24">
+                <path
+                  d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label for="register-confirm-password">Confirm Password</label>
+          <div class="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 24 24">
+              <path
+                d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" />
+            </svg>
+            <input type="password" id="register-confirm-password" placeholder="••••••••" required
+              autocomplete="new-password">
+            <button type="button" class="password-toggle" data-target="register-confirm-password"
+              aria-label="Toggle Password Visibility">
+              <svg class="toggle-icon" viewBox="0 0 24 24">
+                <path
+                  d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" id="register-btn" class="auth-submit-btn">
+          <span>Register</span>
+          <div class="spinner" style="display: none;"></div>
+        </button>
+
+        <p class="auth-toggle-text">
+          Already have an account? <a href="#" id="show-login">Login</a>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <div class="container" id="app-container" style="display: none;">
+
+    <!-- Top Branding Header -->
+    <header class="header">
+      <div class="header-top">
+        <h1>EcoSort AI</h1>
+        <div class="user-profile" id="user-profile" style="display: none;">
+          <span class="user-email" id="header-user-email"></span>
+          <button id="logout-btn" class="logout-btn">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z" />
+            </svg>
+            Logout
+          </button>
+        </div>
+      </div>
+      <p class="subtitle">Smart Waste Analysis & Sustainable Disposal Recommender</p>
+    </header>
+
+    <!-- Main Workspace Grid -->
+    <main class="main-grid">
+
+      <!-- Left Column: Input, Scanner & Classification Results -->
+      <section class="left-column">
+
+        <!-- Search & Discovery Panel -->
+        <div class="glass-panel">
+          <h2>Identify Waste Item</h2>
+
+          <!-- Search Bar -->
+          <div class="search-section">
+            <div class="search-box">
+              <svg class="search-icon-svg" viewBox="0 0 24 24">
+                <path
+                  d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+              </svg>
+              <input type="text" id="search-input"
+                placeholder="Type waste item name (e.g. apple core, bottle, jeans)..." autocomplete="off">
+              <button id="search-btn">Analyze</button>
+            </div>
+
+            <!-- Dynamic Suggestions Box -->
+            <div class="suggestions-box" id="suggestions-box"></div>
+          </div>
+
+          <!-- Quick Category Grid -->
+          <div class="category-explorer">
+            <h3>Quick Categories</h3>
+            <div class="category-grid">
+
+              <div class="category-card" data-category="biodegradable">
+                <!-- Leaf SVG -->
+                <svg viewBox="0 0 24 24">
+                  <path
+                    d="M17 8C8 10 5.9 16.17 6 20c.07.03.14.05.22.05A6.945 6.945 0 0 0 12 18c0-3.5 1.5-6.5 5-10m-3-5C7 5 3.8 11.23 4 16c1.86-1.56 4.34-2.5 7-2.5 2.16 0 4.15.61 5.86 1.63C18.66 9.42 20 6 20 6c-2.5 1.5-6 1-6-3z" />
+                </svg>
+                <span>Biodegradable</span>
+              </div>
+
+              <div class="category-card" data-category="recyclable">
+                <!-- Recycle Triangle SVG -->
+                <svg viewBox="0 0 24 24">
+                  <path
+                    d="M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10A10 10 0 0 0 12 2zm1 14.5h-2v-2h2v2zm0-3.5h-2V7h2v6z" />
+                </svg>
+                <span>Recyclable</span>
+              </div>
+
+              <div class="category-card" data-category="ewaste">
+                <!-- Plug/Bolt SVG -->
+                <svg viewBox="0 0 24 24">
+                  <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 12 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
+                </svg>
+                <span>E-Waste</span>
+              </div>
+
+              <div class="category-card" data-category="non-recyclable">
+                <!-- Trash Can SVG -->
+                <svg viewBox="0 0 24 24">
+                  <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
+                </svg>
+                <span>Non-Recyclable</span>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Image Drop / Scanner Zone -->
+          <div class="drop-zone-section">
+            <div class="drop-zone" id="drop-zone">
+              <input type="file" id="file-input" class="file-input" accept="image/*">
+              <!-- Upload Cloud SVG -->
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M19.35 10.04A7.49 7.49 0 0 0 12 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 0 0 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z" />
+              </svg>
+              <p>Drag & drop item photo or click to upload</p>
+              <span>Simulate computer vision scanner instantly</span>
+            </div>
+
+            <!-- Quick Pre-loaded Sample Scanner items -->
+            <div class="sample-scans-box">
+              <div class="sample-scans-title">Interactive Scan Demonstrations</div>
+              <div class="sample-scans">
+                <button class="sample-btn" data-item="apple_core" data-img="assets/apple.png">
+                  <span class="tag" style="background: var(--color-biodegradable)"></span> Apple Core
+                </button>
+                <button class="sample-btn" data-item="banana_peel" data-img="assets/banana.png">
+                  <span class="tag" style="background: var(--color-biodegradable)"></span> Banana Peel
+                </button>
+                <button class="sample-btn" data-item="vegetable_waste" data-img="assets/vegetable_waste.png">
+                  <span class="tag" style="background: var(--color-biodegradable)"></span> Vegetable Waste
+                </button>
+                <button class="sample-btn" data-item="plastic_bottle" data-img="assets/bottle.png">
+                  <span class="tag" style="background: var(--color-recyclable)"></span> Plastic Bottle
+                </button>
+                <button class="sample-btn" data-item="newspaper" data-img="assets/newspaper.png">
+                  <span class="tag" style="background: var(--color-recyclable)"></span> Newspaper
+                </button>
+                <button class="sample-btn" data-item="aa_battery" data-img="assets/battery.png">
+                  <span class="tag" style="background: var(--color-ewaste)"></span> AA Battery
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Waste Classification Result card (Shows dynamically) -->
+        <div class="result-section" id="result-section">
+          <div class="result-glass-card" id="result-card-inner">
+
+            <!-- Card Header -->
+            <div class="result-header-panel">
+              <div class="result-title-area">
+                <span class="category-tag" id="result-category-badge">Recyclable</span>
+                <span class="status-tag completed" id="result-status-badge" style="display: none;">Disposal
+                  Completed</span>
+                <h2 id="result-item-name">Plastic Water Bottle</h2>
+              </div>
+            </div>
+
+            <!-- Card Body Grid -->
+            <div class="result-body-grid">
+
+              <!-- Left side: visual image and match confidence -->
+              <div class="result-left-panel">
+                <div class="result-image-container">
+                  <img id="result-image" src="" alt="Waste Scan Result">
+                </div>
+
+                <!-- Confidence Match Meter -->
+                <div class="confidence-box">
+                  <div class="confidence-title">
+                    <span>AI Classifier Integrity</span>
+                    <span class="confidence-value" id="result-confidence-text">98% Match</span>
+                  </div>
+                  <div class="confidence-bar">
+                    <div class="confidence-fill" id="result-confidence-fill"></div>
+                  </div>
+                </div>
+
+                <!-- Material detection details -->
+                <div class="material-info">
+                  <span class="material-label">Detected Material</span>
+                  <span class="material-value" id="result-material">PET (Type 1 Plastic)</span>
+                </div>
+              </div>
+
+              <!-- Right side: Prep, Actionable steps and Destination -->
+              <div class="result-right-panel">
+
+                <!-- Target Destination Bin -->
+                <div class="disposal-location-box">
+                  <span class="location-title">Disposal Stream</span>
+                  <span class="location-value" id="result-destination">Blue Recycling Bin</span>
+                </div>
+
+                <!-- Preparation checklist -->
+                <div class="prep-instructions-box">
+                  <h3>Preparation Checklist</h3>
+                  <ul class="prep-list" id="result-prep-list">
+                    <li>
+                      <label class="checkbox-container">
+                        <input type="checkbox" id="prep-chk-0">
+                        <span class="checkmark"></span>
+                        <span class="checkbox-text">Rinse out remaining liquid</span>
+                      </label>
+                    </li>
+                  </ul>
+
+                  <!-- Dynamic Preparation Checklist Completion Message -->
+                  <div id="prep-completion-message" class="prep-completion-box" style="display: none;">
+                    <div class="completion-header">
+                      <svg class="completion-icon" viewBox="0 0 24 24">
+                        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                      </svg>
+                      <h4>Preparation Checklist Completed</h4>
+                    </div>
+                    <p class="completion-sub">Waste is ready for disposal.</p>
+                    <div class="completion-stream">
+                      <span class="stream-label">Recommended Disposal Stream:</span>
+                      <span class="stream-value" id="completion-destination-value">Compost Bin / Green Yard Waste
+                        Bin</span>
+                    </div>
+                    <p class="completion-footer">Thank you for disposing of waste responsibly.</p>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+            <!-- Upcycle suggestion block -->
+            <div class="upcycle-tip-box">
+              <div class="upcycle-title">
+                <!-- Light Bulb SVG -->
+                <svg viewBox="0 0 24 24">
+                  <path
+                    d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" />
+                </svg>
+                <span>Give it a second life (Upcycle suggestion)</span>
+              </div>
+              <p class="upcycle-text" id="result-upcycle">Can be cut and used as a seedling starter pot.</p>
+            </div>
+
+            <!-- Impact facts banner -->
+            <div class="result-footer-metrics">
+              <div class="metric-card">
+                <span class="metric-label">Estimated Offset</span>
+                <span class="metric-value" id="impact-co2">+0.25 kg CO2</span>
+              </div>
+              <div class="metric-card">
+                <span class="metric-label">Decomposition</span>
+                <span class="metric-value" id="impact-decompose">450 Years</span>
+              </div>
+              <div class="metric-card">
+                <span class="metric-label">Eco-Score earned</span>
+                <span class="metric-value" id="impact-points">+20 Points</span>
+              </div>
+            </div>
+
+            <!-- Fun Fact section -->
+            <div class="fact-box">
+              <div class="fact-title">
+                <!-- Globe SVG -->
+                <svg viewBox="0 0 24 24">
+                  <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.53c-.26-.81-1-1.4-1.9-1.4h-1v-3c0-.55-.45-1-1-1h-6v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
+                </svg>
+                <span>Environmental trivia</span>
+              </div>
+              <p class="fact-text" id="result-funfact">Recycling a single plastic bottle saves enough energy to power a
+                lightbulb for 3 hours!</p>
+            </div>
+
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Right Column: User Dashboard / Stats & Logs -->
+      <section class="right-column" id="dashboard-section">
+
+        <div class="glass-panel">
+          <div class="dashboard-title-area">
+            <h2>Your Eco Dashboard</h2>
+            <div class="dashboard-tabs">
+              <button class="tab-btn active" id="tab-stats">Stats</button>
+              <button class="tab-btn" id="tab-leaderboard">Leaderboard</button>
+            </div>
+          </div>
+
+          <!-- Stats & Analytics View -->
+          <div id="dashboard-stats-view">
+            <!-- Micro Score Cards Grid -->
+            <div class="stats-cards-grid">
+              <div class="stat-micro-card">
+                <div class="stat-num" id="stat-scanned">0</div>
+                <div class="stat-label">Items Sorted</div>
+              </div>
+              <div class="stat-micro-card">
+                <div class="stat-num" id="stat-points">0</div>
+                <div class="stat-label">Eco Points</div>
+              </div>
+              <div class="stat-micro-card">
+                <div class="stat-num" id="stat-co2">0.0 kg</div>
+                <div class="stat-label">CO2 Prevented</div>
+              </div>
+            </div>
+
+            <!-- Diversion Rate Chart + Category breakdown -->
+            <div class="diversion-analytics-container">
+
+              <!-- Circular Radial SVG chart -->
+              <div class="chart-wrapper">
+                <svg class="circular-chart" viewBox="0 0 120 120">
+                  <defs>
+                    <linearGradient id="chart-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stop-color="#6366f1" />
+                      <stop offset="100%" stop-color="#4f46e5" />
+                    </linearGradient>
+                  </defs>
+                  <circle class="circle-bg" cx="60" cy="60" r="52" />
+                  <circle class="circle-progress" id="diversion-circle-progress" cx="60" cy="60" r="52" />
+                </svg>
+                <div class="chart-center-text">
+                  <span class="diversion-percentage" id="diversion-percentage">0%</span>
+                  <span class="diversion-label">Diverted</span>
+                </div>
+              </div>
+
+              <!-- Vertical Breakdown list -->
+              <div class="category-breakdown">
+                <div class="breakdown-row">
+                  <div class="breakdown-left">
+                    <span class="breakdown-dot biodegradable"></span>
+                    <span class="breakdown-name">Biodegradable</span>
+                  </div>
+                  <span class="breakdown-val" id="count-biodegradable">0</span>
+                </div>
+                <div class="breakdown-row">
+                  <div class="breakdown-left">
+                    <span class="breakdown-dot recyclable"></span>
+                    <span class="breakdown-name">Recyclable</span>
+                  </div>
+                  <span class="breakdown-val" id="count-recyclable">0</span>
+                </div>
+                <div class="breakdown-row">
+                  <div class="breakdown-left">
+                    <span class="breakdown-dot ewaste"></span>
+                    <span class="breakdown-name">E-Waste</span>
+                  </div>
+                  <span class="breakdown-val" id="count-ewaste">0</span>
+                </div>
+                <div class="breakdown-row">
+                  <div class="breakdown-left">
+                    <span class="breakdown-dot non-recyclable"></span>
+                    <span class="breakdown-name">Non-Recyclable</span>
+                  </div>
+                  <span class="breakdown-val" id="count-non-recyclable">0</span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Achievements/Badges unlocked grid -->
+            <div class="badges-container">
+              <div class="badges-title">Achievements Unlocked</div>
+              <div class="badges-grid">
+
+                <div class="badge-item" id="badge-first-scan">
+                  <!-- Checkmark Shield SVG -->
+                  <svg viewBox="0 0 24 24">
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                  </svg>
+                  <span class="title">First Steps</span>
+                  <span class="desc">Scan 1st item</span>
+                </div>
+
+                <div class="badge-item" id="badge-diversion">
+                  <!-- Recycle loop SVG -->
+                  <svg viewBox="0 0 24 24">
+                    <path
+                      d="M17 17h5v-5h-2v3H4v-3H2v5h15zm-5-9V3l-5 5 5 5V9c3.87 0 7 3.13 7 7a6.9 6.9 0 0 1-1.12 3.78l1.44 1.44A8.93 8.93 0 0 0 21 16c0-4.97-4.03-9-9-9z" />
+                  </svg>
+                  <span class="title">Sorter Pro</span>
+                  <span class="desc">Divert 5 items</span>
+                </div>
+
+                <div class="badge-item" id="badge-organic">
+                  <!-- Leaf outline SVG -->
+                  <svg viewBox="0 0 24 24">
+                    <path
+                      d="M12 3C6.5 3 2 6.5 2 12c0 3.58 2.5 6.58 6 7.5v-2.13C5.5 16.5 4 14.5 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8c-1 0-3-.5-4.5-2S13 7 12 7c-.55 0-1 .45-1 1v13h2v-6c1.5 0 3 .5 4.5 2s2 3 2 3h1.5c.67 0 1.25-.45 1.4-1.1 1-3.58-1.5-6.58-5.4-7.4 2-2 3.5-5 3.5-7.5 0-5.5-4.5-9-10-9z" />
+                  </svg>
+                  <span class="title">Eco Grower</span>
+                  <span class="desc">Compost 3 items</span>
+                </div>
+
+                <div class="badge-item" id="badge-points">
+                  <!-- Trophy SVG -->
+                  <svg viewBox="0 0 24 24">
+                    <path
+                      d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v3c0 2.24 1.55 4.13 3.61 4.64C7.54 18.06 10 19.8 10 21v1h4v-1c0-1.2 2.46-2.94 4.39-4.36C20.45 14.13 22 12.24 22 10V7c0-1.1-.9-2-2-2zM5 10V7h2v3H5zm14 0h-2V7h2v3z" />
+                  </svg>
+                  <span class="title">Elite Saver</span>
+                  <span class="desc">Earn 150 points</span>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Sorting Trends Chart -->
+            <div class="chart-section-box">
+              <div class="chart-canvas-container">
+                <canvas id="sorting-trend-chart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Global Leaderboard View -->
+          <div id="dashboard-leaderboard-view" style="display: none;">
+            <div class="leaderboard-container">
+              <div class="leaderboard-header">
+                <span class="rank-col">Rank</span>
+                <span class="name-col">Eco Sorter</span>
+                <span class="points-col">Eco Points</span>
+              </div>
+              <div class="leaderboard-list" id="leaderboard-list">
+                <!-- Dynamic Content -->
+              </div>
+            </div>
+          </div>
+
+          <!-- History log panel -->
+          <div class="history-section">
+            <div class="history-header">
+              <h3>Recent Sorting History</h3>
+              <button class="clear-btn" id="clear-history-btn">
+                <!-- Trash outline SVG -->
+                <svg viewBox="0 0 24 24">
+                  <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM8 9h8v10H8V9zm7.5-5l-1-1h-5l-1 1H5v2h14V4z" />
+                </svg>
+                Clear Log
+              </button>
+            </div>
+
+            <!-- List scroll area -->
+            <div class="history-list" id="history-list"></div>
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- AI Computer Vision Scanner Overlay Modal -->
+    <div class="scan-modal" id="scan-modal">
+      <div class="scan-content">
+
+        <!-- Scanner hud viewfinder -->
+        <div class="scanner-viewport">
+          <div class="scanner-line"></div>
+          <div class="scanner-grid"></div>
+
+          <span class="hud-corner hud-tl"></span>
+          <span class="hud-corner hud-tr"></span>
+          <span class="hud-corner hud-bl"></span>
+          <span class="hud-corner hud-br"></span>
+
+          <div class="hud-dots">SCANNING IN PROGRESS...</div>
+
+          <img id="scanner-view-img" class="scanner-view-img" src="" alt="Scanner View">
+          <div id="scanner-placeholder" class="scanner-placeholder">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" />
+            </svg>
+            <p>Ready to analyze material spectral density</p>
+          </div>
+        </div>
+
+        <!-- Progress bar and statuses -->
+        <div class="scan-progress-container">
+          <div class="scan-progress-bar" id="scan-progress-bar"></div>
+        </div>
+        <div id="scan-status">
+          <span class="pulse-dot"></span> Initiating visual classification...
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
